@@ -1,0 +1,334 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Formulario de Registro</title>
+  <style>
+    * {
+      box-sizing: border-box;
+    }
+
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #f5f5f5;
+      display: flex;
+      flex-direction: column;
+      min-height: 100vh;
+    }
+
+    header {
+      background: #0D47A1;
+      color: white;
+      padding: 20px 30px;
+      text-align: center;
+    }
+
+    main {
+      flex: 1;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 40px 20px;
+    }
+
+    .card {
+      background-color: #ffffff;
+      padding: 40px;
+      border-radius: 20px;
+      box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+      width: 100%;
+      max-width: 500px;
+    }
+
+    .card h2 {
+      color: #003079;
+      margin-bottom: 25px;
+      text-align: center;
+    }
+
+    form {
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+
+    label {
+      font-weight: bold;
+      color: #333;
+      text-align: left;
+    }
+
+    input,
+    select,
+    textarea {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1px solid #ccc;
+      border-radius: 8px;
+      font-size: 1rem;
+      transition: border 0.3s;
+    }
+
+    input:focus,
+    select:focus,
+    textarea:focus {
+      border-color: #0D47A1;
+      outline: none;
+    }
+
+    textarea {
+      resize: vertical;
+      min-height: 80px;
+    }
+
+    .btn {
+      background: #0D47A1;
+      color: white;
+      padding: 12px;
+      border: none;
+      border-radius: 8px;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background 0.3s;
+    }
+
+    .btn:hover {
+      background: #2E7D32;
+    }
+
+    .terminos {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      font-size: 0.95rem;
+      color: #333;
+      text-align: left;
+    }
+
+    .terminos a {
+      color: #0D47A1;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    .terminos a:hover {
+      text-decoration: underline;
+    }
+
+    #contador {
+      font-size: 0.85rem;
+      color: #666;
+      text-align: right;
+    }
+
+    .error {
+      color: red;
+      font-size: 0.85rem;
+      margin-top: 3px;
+      display: none;
+    }
+
+    .input-error {
+      border-color: white;
+      background-color: #ffe6e6;
+    }
+
+    footer {
+      background-color: #0a3d62;
+      color: white;
+      text-align: center;
+      padding: 15px 0;
+      font-size: 14px;
+      margin-top: auto;
+    }
+  </style>
+</head>
+
+<body>
+  <header>
+    <h1>Bienvenido al Registro de Usuario</h1>
+  </header>
+
+  <main>
+    <div class="card">
+      <h2>Formulario de Registro</h2>
+      <form id="registroForm" novalidate>
+        <div>
+          <label for="nombre">Nombre:</label>
+          <input type="text" id="nombre" name="nombre" placeholder="Ingresa tu nombre" required>
+          <p class="error" id="error-nombre">Por favor ingresa un nombre válido.</p>
+        </div>
+
+        <div>
+          <label for="apellido">Apellido:</label>
+          <input type="text" id="apellido" name="apellido" placeholder="Ingresa tu apellido" required>
+          <p class="error" id="error-apellido">Por favor ingresa un apellido válido.</p>
+        </div>
+
+        <div>
+          <label for="email">Correo Electrónico:</label>
+          <input type="email" id="email" name="email" placeholder="ejemplo@correo.com" required>
+          <p class="error" id="error-email">Por favor ingresa un correo electrónico válido.</p>
+        </div>
+
+        <div>
+          <label for="fecha">Fecha de Nacimiento:</label>
+          <input type="date" id="fecha" name="fecha" required>
+          <p class="error" id="error-fecha">Selecciona una fecha válida.</p>
+        </div>
+
+        <div>
+          <label for="genero">Género:</label>
+          <select id="genero" name="genero" required>
+            <option value="" disabled selected>Seleccionar</option>
+            <option value="hombre">Hombre</option>
+            <option value="mujer">Mujer</option>
+            <option value="otro">Otro</option>
+          </select>
+          <p class="error" id="error-genero">Selecciona una opción.</p>
+        </div>
+
+        <div>
+          <label for="pais">País:</label>
+          <input type="text" id="pais" name="pais" placeholder="Ingresa tu país">
+        </div>
+
+        <div>
+          <label for="descripcion">Descripción Personal:</label>
+          <textarea id="descripcion" name="descripcion" maxlength="150"
+            placeholder="Cuéntanos un poco sobre ti..."></textarea>
+          <p id="contador">0/150 caracteres</p>
+        </div>
+
+        <div class="terminos">
+          <input type="checkbox" id="terminos" name="terminos" required>
+          <label for="terminos">Acepto los <a href="#" target="_blank">términos y condiciones</a>.</label>
+        </div>
+        <p class="error" id="error-terminos">Debes aceptar los términos y condiciones.</p>
+
+        <button type="submit" class="btn">Enviar Registro</button>
+        <button type="reset" class="btn">Borrar</button>
+      </form>
+    </div>
+  </main>
+
+  <footer>
+    <p>© 2025 Desarrollo propio - Todos los derechos reservados</p>
+  </footer>
+
+  <script>
+    const form = document.getElementById('registroForm');
+    const descripcion = document.getElementById('descripcion');
+    const contador = document.getElementById('contador');
+
+    // 🟢 Contador de caracteres
+    descripcion.addEventListener('input', () => {
+      contador.textContent = `${descripcion.value.length}/150 caracteres`;
+    });
+
+    // 🟢 Función para mostrar error
+    function mostrarError(idCampo, mensaje) {
+      const error = document.getElementById(`error-${idCampo}`);
+      const campo = document.getElementById(idCampo);
+      error.textContent = mensaje;
+      error.style.display = 'block';
+      campo.classList.add('input-error');
+    }
+
+    // 🟢 Función para limpiar error
+    function limpiarError(idCampo) {
+      const error = document.getElementById(`error-${idCampo}`);
+      const campo = document.getElementById(idCampo);
+      error.style.display = 'none';
+      campo.classList.remove('input-error');
+    }
+
+    // 🟢 Validación en tiempo real
+    const campos = ['nombre', 'apellido', 'email', 'fecha', 'genero'];
+    campos.forEach(id => {
+      const campo = document.getElementById(id);
+      campo.addEventListener('input', () => limpiarError(id));
+      campo.addEventListener('change', () => limpiarError(id));
+    });
+
+    // 🟢 Validación del checkbox
+    const terminos = document.getElementById('terminos');
+    terminos.addEventListener('change', () => {
+      document.getElementById('error-terminos').style.display = 'none';
+    });
+
+    // 🟢 Evento enviar
+    form.addEventListener('submit', function (e) {
+      e.preventDefault();
+      let valido = true;
+
+      const nombre = document.getElementById('nombre');
+      const apellido = document.getElementById('apellido');
+      const email = document.getElementById('email');
+      const fecha = document.getElementById('fecha');
+      const genero = document.getElementById('genero');
+
+      // Validaciones básicas
+      if (nombre.value.trim().length < 2) {
+        mostrarError('nombre', 'Por favor ingresa un nombre válido.');
+        valido = false;
+      }
+
+      if (apellido.value.trim().length < 2) {
+        mostrarError('apellido', 'Por favor ingresa un apellido válido.');
+        valido = false;
+      }
+
+      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+      if (!emailRegex.test(email.value)) {
+        mostrarError('email', 'Por favor ingresa un correo electrónico válido.');
+        valido = false;
+      }
+
+      if (!fecha.value) {
+        mostrarError('fecha', 'Selecciona una fecha válida.');
+        valido = false;
+      }
+
+      if (!genero.value) {
+        mostrarError('genero', 'Selecciona una opción.');
+        valido = false;
+      }
+
+      if (!terminos.checked) {
+        document.getElementById('error-terminos').style.display = 'block';
+        valido = false;
+      }
+
+      if (!valido) return; // Detiene si hay errores
+
+      // Crear y descargar JSON
+      const datos = {
+        nombre: nombre.value.trim(),
+        apellido: apellido.value.trim(),
+        email: email.value.trim(),
+        fechaNacimiento: fecha.value,
+        genero: genero.value,
+        pais: document.getElementById('pais').value.trim(),
+        descripcion: descripcion.value.trim(),
+        fechaRegistro: new Date().toLocaleString()
+      };
+
+      const jsonString = JSON.stringify(datos, null, 2);
+      const blob = new Blob([jsonString], { type: "application/json" });
+      const enlace = document.createElement("a");
+      enlace.href = URL.createObjectURL(blob);
+      enlace.download = `registro_${datos.nombre}_${datos.apellido}.json`;
+      enlace.click();
+
+      form.reset();
+      contador.textContent = "0/150 caracteres";
+      alert('✅ Registro exitoso. Tu archivo JSON se descargó correctamente.');
+    });
+  </script>
+</body>
+
+</html>
