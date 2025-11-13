@@ -83,7 +83,20 @@
       resize: vertical;
       min-height: 80px;
     }
+    .progreso{
+      margin-top: 15px;
+      height: 15px;
+      background-color: #c0c0c0;
+      border-radius: 10px;
+      overflow: hidden;
 
+    }
+    .barra{
+      height: 100%;
+      width: 0%;
+      background-color: #9cadf7;
+      transition: width 0.3s;
+    }
     .btn {
       background: #0D47A1;
       color: white;
@@ -208,7 +221,10 @@
           <label for="terminos">Acepto los <a href="#" target="_blank">términos y condiciones</a>.</label>
         </div>
         <p class="error" id="error-terminos">Debes aceptar los términos y condiciones.</p>
-
+        <div class="progreso">
+        <div class="barra" id="barra">
+        </div>
+        </div>
         <button type="submit" class="btn">Enviar Registro</button>
         <button type="reset" class="btn">Borrar</button>
       </form>
@@ -219,116 +235,132 @@
     <p>© 2025 Desarrollo propio - Todos los derechos reservados</p>
   </footer>
 
-  <script>
-    const form = document.getElementById('registroForm');
-    const descripcion = document.getElementById('descripcion');
-    const contador = document.getElementById('contador');
+ <script>
+  const form = document.getElementById('registroForm');
+  const descripcion = document.getElementById('descripcion');
+  const contador = document.getElementById('contador');
+  const barra = document.getElementById('barra');
 
-    // 🟢 Contador de caracteres
-    descripcion.addEventListener('input', () => {
-      contador.textContent = `${descripcion.value.length}/150 caracteres`;
-    });
+  descripcion.addEventListener('input', () => {
+    contador.textContent = `${descripcion.value.length}/150 caracteres`;
+  });
 
-    // 🟢 Función para mostrar error
-    function mostrarError(idCampo, mensaje) {
-      const error = document.getElementById(`error-${idCampo}`);
-      const campo = document.getElementById(idCampo);
-      error.textContent = mensaje;
-      error.style.display = 'block';
-      campo.classList.add('input-error');
-    }
+  function mostrarError(idCampo, mensaje) {
+    const error = document.getElementById(`error-${idCampo}`);
+    const campo = document.getElementById(idCampo);
+    error.textContent = mensaje;
+    error.style.display = 'block';
+    campo.classList.add('input-error');
+  }
 
-    // 🟢 Función para limpiar error
-    function limpiarError(idCampo) {
-      const error = document.getElementById(`error-${idCampo}`);
-      const campo = document.getElementById(idCampo);
-      error.style.display = 'none';
-      campo.classList.remove('input-error');
-    }
+  function limpiarError(idCampo) {
+    const error = document.getElementById(`error-${idCampo}`);
+    const campo = document.getElementById(idCampo);
+    error.style.display = 'none';
+    campo.classList.remove('input-error');
+  }
 
-    // 🟢 Validación en tiempo real
-    const campos = ['nombre', 'apellido', 'email', 'fecha', 'genero'];
+  // 🔥 Campos que cuentan para el progreso (sin el checkbox)
+  const campos = ['nombre', 'apellido', 'email', 'fecha', 'genero', 'pais', 'descripcion'];
+
+  function actualizarprogreso() {
+    let completados = 0;
+    const total = campos.length;
+
     campos.forEach(id => {
       const campo = document.getElementById(id);
-      campo.addEventListener('input', () => limpiarError(id));
-      campo.addEventListener('change', () => limpiarError(id));
+
+      // textarea y inputs funcionan igual
+      if (campo.value && campo.value.trim() !== "") {
+        completados++;
+      }
     });
 
-    // 🟢 Validación del checkbox
-    const terminos = document.getElementById('terminos');
-    terminos.addEventListener('change', () => {
-      document.getElementById('error-terminos').style.display = 'none';
-    });
+    const porcentaje = Math.round((completados / total) * 100);
+    barra.style.width = porcentaje + "%";
+  }
 
-    // 🟢 Evento enviar
-    form.addEventListener('submit', function (e) {
-      e.preventDefault();
-      let valido = true;
+  // 🔥 Actualizar barra cuando escriben
+  campos.forEach(id => {
+    const campo = document.getElementById(id);
+    campo.addEventListener('input', actualizarprogreso);
+    campo.addEventListener('change', actualizarprogreso);
+  });
 
-      const nombre = document.getElementById('nombre');
-      const apellido = document.getElementById('apellido');
-      const email = document.getElementById('email');
-      const fecha = document.getElementById('fecha');
-      const genero = document.getElementById('genero');
+  // 🔥 No cuenta el checkbox, solo validación
+  const terminos = document.getElementById('terminos');
+  terminos.addEventListener('change', () => {
+    document.getElementById('error-terminos').style.display = 'none';
+  });
 
-      // Validaciones básicas
-      if (nombre.value.trim().length < 2) {
-        mostrarError('nombre', 'Por favor ingresa un nombre válido.');
-        valido = false;
-      }
-
-      if (apellido.value.trim().length < 2) {
-        mostrarError('apellido', 'Por favor ingresa un apellido válido.');
-        valido = false;
-      }
-
-      const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
-      if (!emailRegex.test(email.value)) {
-        mostrarError('email', 'Por favor ingresa un correo electrónico válido.');
-        valido = false;
-      }
-
-      if (!fecha.value) {
-        mostrarError('fecha', 'Selecciona una fecha válida.');
-        valido = false;
-      }
-
-      if (!genero.value) {
-        mostrarError('genero', 'Selecciona una opción.');
-        valido = false;
-      }
-
-      if (!terminos.checked) {
-        document.getElementById('error-terminos').style.display = 'block';
-        valido = false;
-      }
-
-      if (!valido) return; // Detiene si hay errores
-
-      // Crear y descargar JSON
-      const datos = {
-        nombre: nombre.value.trim(),
-        apellido: apellido.value.trim(),
-        email: email.value.trim(),
-        fechaNacimiento: fecha.value,
-        genero: genero.value,
-        pais: document.getElementById('pais').value.trim(),
-        descripcion: descripcion.value.trim(),
-        fechaRegistro: new Date().toLocaleString()
-      };
-
-      const jsonString = JSON.stringify(datos, null, 2);
-      const blob = new Blob([jsonString], { type: "application/json" });
-      const enlace = document.createElement("a");
-      enlace.href = URL.createObjectURL(blob);
-      enlace.download = `registro_${datos.nombre}_${datos.apellido}.json`;
-      enlace.click();
-
-      form.reset();
+  // 🔥 Reset TOTAL cuando se presione "Borrar"
+  form.addEventListener('reset', () => {
+    setTimeout(() => {
+      barra.style.width = "0%";
       contador.textContent = "0/150 caracteres";
-      alert('✅ Registro exitoso. Tu archivo JSON se descargó correctamente.');
-    });
-  </script>
-</body>
+    }, 50);
+  });
 
-</html>
+  form.addEventListener('submit', function (e) {
+    e.preventDefault();
+    let valido = true;
+
+    const nombre = document.getElementById('nombre');
+    const apellido = document.getElementById('apellido');
+    const email = document.getElementById('email');
+    const fecha = document.getElementById('fecha');
+    const genero = document.getElementById('genero');
+
+    if (nombre.value.trim().length < 2) {
+      mostrarError('nombre', 'Por favor ingresa un nombre válido.');
+      valido = false;
+    }
+    if (apellido.value.trim().length < 2) {
+      mostrarError('apellido', 'Por favor ingresa un apellido válido.');
+      valido = false;
+    }
+    const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+    if (!emailRegex.test(email.value)) {
+      mostrarError('email', 'Por favor ingresa un correo electrónico válido.');
+      valido = false;
+    }
+    if (!fecha.value) {
+      mostrarError('fecha', 'Selecciona una fecha válida.');
+      valido = false;
+    }
+    if (!genero.value) {
+      mostrarError('genero', 'Selecciona una opción.');
+      valido = false;
+    }
+    if (!terminos.checked) {
+      document.getElementById('error-terminos').style.display = 'block';
+      valido = false;
+    }
+
+    if (!valido) return;
+
+    const datos = {
+      nombre: nombre.value.trim(),
+      apellido: apellido.value.trim(),
+      email: email.value.trim(),
+      fechaNacimiento: fecha.value,
+      genero: genero.value,
+      pais: document.getElementById('pais').value.trim(),
+      descripcion: descripcion.value.trim(),
+      fechaRegistro: new Date().toLocaleString()
+    };
+
+    const jsonString = JSON.stringify(datos, null, 2);
+    const blob = new Blob([jsonString], { type: "application/json" });
+    const enlace = document.createElement("a");
+    enlace.href = URL.createObjectURL(blob);
+    enlace.download = `registro_${datos.nombre}_${datos.apellido}.json`;
+    enlace.click();
+
+    form.reset();
+    barra.style.width = "0%";
+    contador.textContent = "0/150 caracteres";
+
+    alert('✅ Registro exitoso. El archivo JSON se descargó correctamente.');
+  });
+</script>
